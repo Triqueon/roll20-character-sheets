@@ -848,7 +848,7 @@ function migrateTo20230618(migrationChain) {
 		}
 		safeGetAttrs(["subtag1"], function (v) {
 			let attrsToChange = {
-				"z_repraesentation": valueMap[v[subtag1]]
+				"z_erstrepraesentation": valueMap[v[subtag1]]
 			}
 			safeSetAttrs(attrsToChange, {}, function () {
 				callNextMigration(migrationChain);
