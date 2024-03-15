@@ -6,7 +6,8 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 		if rep is kophtan, do something
 	*/
 	const func = "Attribute modification by spell representation";
-	let spellRep = charData[spellRepAttr] === 0 ? charData["z_erstrepraesentation"] : charData[spellRepAttr];
+	let spellRep = (charData[spellRepAttr] === 0 || charData[spellRepAttr] === "")? charData["z_erstrepraesentation"] : charData[spellRepAttr];
+	debugLog(func, spellRep, charData, spellAttrs);
 	let modified = false;
 	switch (spellRep) {
 		case "Elf":

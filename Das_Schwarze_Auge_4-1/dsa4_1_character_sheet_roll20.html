@@ -7650,7 +7650,7 @@
 					</div>
 					<div class="talent-cell talent-eigenschaften">KL/FF/GE</div>
 					<div class="talent-cell talent-rep">
-						<select type="text" name="attr_z_Animato_rep">
+						<select type="text" name="attr_z_Animatio_rep">
 							<option value="">---</option>
 							<option value="Mag">Mag</option>
 							<option value="Elf">Elf</option>
@@ -27724,7 +27724,8 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 		if rep is kophtan, do something
 	*/
 	const func = "Attribute modification by spell representation";
-	let spellRep = charData[spellRepAttr] === 0 ? charData["z_erstrepraesentation"] : charData[spellRepAttr];
+	let spellRep = (charData[spellRepAttr] === 0 || charData[spellRepAttr] === "")? charData["z_erstrepraesentation"] : charData[spellRepAttr];
+	debugLog(func, spellRep, charData, spellAttrs);
 	let modified = false;
 	switch (spellRep) {
 		case "Elf":
