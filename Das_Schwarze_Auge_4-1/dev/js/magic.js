@@ -1,25 +1,71 @@
 /* magic begin */
-on(spells.map(spell => "clicked:" + spell + "-action").join(" "), async (info) => {
+function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttrs) {
+	/* deal with representation special rules:
+		if representation is elven and KL > IN, replace first KL with IN 
+		if rep is achaz and two rolls are for KL or two are for IN, replace one of them with max(KL, IN)
+		if rep is kophtan, do something
+	*/
+	const func = "Attribute modification by spell representation";
+	let spellRep = charData[spellRepAttr] === 0 ? charData["z_erstrepraesentation"] : charData[spellRepAttr];
+	let modified = false;
+	switch (spellRep) {
+		case "Elf":
+			debugLog(func, "Adapting for elven rep");
+			if (charData['KL'] > charData['IN']) {
+				break;
+			}
+			for (let i = 0; i < 3; i++) {
+				if (spellAttrs[i] === "KL" && (spellAttrs[(i+1) % 3] !== "IN" || spellAttrs[(i + 2) % 3] !== "IN")) {
+					spellAttrs[i] = "IN";
+					modified = true;
+					break;
+				}
+			}
+			break;
+		case "Ach":
+			debugLog(func, "Adapting for achaz rep");
+			let doubleAttr = "";
+			if (spellAttrs[0] === "KL" || spellAttrs[0] === "IN") {
+				if	(spellAttrs[1] === spellAttrs[0] || spellAttrs[2] === spellAttrs[0]) {
+					doubleAttr = spellAttrs[0];
+				}
+			} else {
+				if ((spellAttrs[1] === "KL" || spellAttrs[1] === "IN") && spellAttrs[1] === spellAttrs[2]) {
+					doubleAttr = spellAttrs[1];
+				}
+			}
+			let otherAttr = doubleAttr === "KL" ? "IN" : "KL"
+			if (doubleAttr !== "" && charData[doubleAttr] < charData[otherAttr]) {
+				for (let i = 0; i < 3; i++) {
+					if (spellAttrs[i] === doubleAttr) {
+						spellAttrs[i] = otherAttr;
+						modified = true;
+						break;
+					}
+					
+				}
+			}
+			break;
+		case "Kop":
+			debugLog(func, "Adapting for kophtan rep");
+			//TODO
+			break;
+		default:
+			break;
+	}
+	return modified;
+}
+
+on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 	var func = "Action Listener for Spell Roll Buttons";
 	var trigger = info["triggerName"].replace(/clicked:([^-]+)-action/, '$1');
 	var nameInternal = spellsData[trigger]["internal"];
 	var nameUI = spellsData[trigger]["ui"];
 	var stats = spellsData[trigger]["stats"];
+	var spellRepAttr = trigger + "_rep";
 	debugLog(func, trigger, spellsData[trigger]);
-	safeGetAttrs(["KL", "IN", "z_repraesentation", "v_festematrix", "n_spruchhemmung"], async function (v) {
-		/* deal with elven representation:
-			if representation is elven and KL > IN, replace first KL with IN 
-		*/
-		if (v["subtag1"] === "Elf" && v["KL"] < v["IN"]) {
-			if (stats[0] === "KL" && (stats[1] !== "IN" || stats[2] !== "IN")) {
-				stats[0] = "IN";
-			} else if (stats[1] === "KL") {
-				stats[1] = "IN";
-			} else if (stats[2] === "KL") {
-				stats[2] = "IN";
-			}
-		}
-		
+	safeGetAttrs(["z_erstrepraesentation", spellRepAttr, "v_festematrix", "n_spruchhemmung", "KL", "IN", "CH"], function (v) {
+		let repModified = modifySpellAttributesByRepresentation(spellRepAttr, v, stats);
 		// Build Roll Macro
 		var rollMacro = "";
 
@@ -37,7 +83,8 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), async (info) =
 			"{{roll=[[3d20cs<@{cs_zauber}cf>@{cf_zauber}]]}} " +
 			"{{result=[[0]]}} " +
 			"{{criticality=[[0]]}} " +
-			"{{critThresholds=[[[[@{cs_zauber}]]d1cs0cf2 + [[@{cf_zauber}]]d1cs0cf2]]}} ";
+			"{{critThresholds=[[[[@{cs_zauber}]]d1cs0cf2 + [[@{cf_zauber}]]d1cs0cf2]]}} " + 
+			"{{repmod=" + (repModified ? "Die verwendeten Attribute wurden durch die Repräsentation modifiziert" : "") + "}} ";
 		debugLog(func, rollMacro);
 
 		// Execute Roll
