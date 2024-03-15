@@ -137,31 +137,37 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 				let festeMatrix = v["v_festematrix"] === "0" ? false : true;
 				let spruchhemmung = v["n_spruchhemmung"] === "0" ? false : true;
 
-				for (roll of rolls) {
-					if (roll <= success) {
+				for (roll of rolls)
+				{
+					if (roll <= success)
+					{
 						successes += 1;
 					} else if (roll >= failure) {
 						failures += 1;
 					}
-					if (successes >= 2) {
+					if (successes >= 2)
+					{
 						criticality = successes;
 					} else if (failures >= 2) {
 						criticality = -failures;
 					}
 				}
 				// feste Matrix
-				if (festeMatrix && criticality === -2) {
+				if (festeMatrix && criticality === -2)
+				{
 					criticality = -1;
 					festeMatrixSave = true;
 
-					for (roll of rolls) {
+					for (roll of rolls)
+					{
 						if (
 							(roll > success) &&
 							(roll < failure) &&
 							(
 								roll === 18 || roll === 19
 							)
-						) {
+						)
+						{
 							criticality -= 1;
 							festeMatrixSave = false;
 						}
@@ -190,19 +196,23 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 			var TaPstar = effTaW;
 
 			// Negativer TaW: |effTaW| zu Teilwürfen addieren
-			if (criticality >= 2) {
+			if (criticality >= 2)
+			{
 				TaPstar = TaW;
 				result = 1;
 			} else {
-				if (effTaW < 0) {
-					for (roll in rolls) {
+				if (effTaW < 0)
+				{
+					for (roll in rolls)
+					{
 						effRolls[roll] = rolls[roll] + Math.abs(effTaW);
 					}
 					TaPstar = 0;
 				}
 
 				// TaP-Verbrauch für jeden Wurf
-				for (roll in effRolls) {
+				for (roll in effRolls)
+				{
 					TaPstar -= Math.max(0, effRolls[roll] - stats[roll]);
 				}
 
@@ -210,11 +220,14 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 				TaPstar = Math.min(TaW, TaPstar);
 
 				// Ergebnis an Doppel/Dreifach-20 anpassen
-				if (Math.abs(criticality) <= 1) {
+				if (Math.abs(criticality) <= 1)
+				{
 					result = TaPstar < 0 ? 0 : 1;
-					if (festeMatrixSave && result === 0) {
+					if (festeMatrixSave && result === 0)
+					{
 						result = -1;
-					} else if (festeMatrixSave && result === 1) {
+					} else if (festeMatrixSave && result === 1)
+					{
 						result = 2;
 					}
 				} else if (criticality <= -2) {
