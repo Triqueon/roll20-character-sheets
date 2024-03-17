@@ -27730,7 +27730,7 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 	switch (spellRep) {
 		case "Elf":
 			debugLog(func, "Adapting for elven rep");
-			if (charData['KL'] > charData['IN']) {
+			if (charData['KL'] >= charData['IN']) {
 				break;
 			}
 			for (let i = 0; i < 3; i++) {
