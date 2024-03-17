@@ -1,9 +1,9 @@
 /* magic begin */
 function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttrs) {
 	/* deal with representation special rules:
-		if representation is elven and KL > IN, replace first KL with IN 
+		if representation is elven and KL < IN, replace first KL with IN, unless that would make all rolls IN 
 		if rep is achaz and two rolls are for KL or two are for IN, replace one of them with max(KL, IN)
-		if rep is kophtan, do something
+		if rep is kophtan, and KL < CH, replace first KL with CH, unless that would make all rolls IN
 	*/
 	const func = "Attribute modification by spell representation";
 	let spellRep = (charData[spellRepAttr] === 0 || charData[spellRepAttr] === "")? charData["z_erstrepraesentation"] : charData[spellRepAttr];
@@ -12,7 +12,7 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 	switch (spellRep) {
 		case "Elf":
 			debugLog(func, "Adapting for elven rep");
-			if (charData['KL'] > charData['IN']) {
+			if (charData['KL'] >= charData['IN']) {
 				break;
 			}
 			for (let i = 0; i < 3; i++) {
@@ -49,7 +49,16 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 			break;
 		case "Kop":
 			debugLog(func, "Adapting for kophtan rep");
-			//TODO
+			if (charData['KL'] >= charData['CH']) {
+				break;
+			}
+			for (let i = 0; i < 3; i++) {
+				if (spellAttrs[i] === "KL" && (spellAttrs[(i+1) % 3] !== "CH" || spellAttrs[(i + 2) % 3] !== "CH")) {
+					spellAttrs[i] = "CH";
+					modified = true;
+					break;
+				}
+			}
 			break;
 		default:
 			break;
