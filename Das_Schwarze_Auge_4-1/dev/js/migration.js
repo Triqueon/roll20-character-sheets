@@ -832,7 +832,7 @@ function migrateTo20230618(migrationChain) {
 }
 
 /*
-	Migration steps: rename attribute subtag1 to z_repraesentation and map its value
+	Migration steps: rename attribute subtag1 to z_erstrepraesentation and map its value
 */
 function migrateTo20240314(migrationChain) {
 	var caller = "migrateTo20240314";
