@@ -6,9 +6,15 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 		if rep is kophtan, and KL < CH, replace first KL with CH, unless that would make all rolls IN
 	*/
 	const func = "Attribute modification by spell representation";
-	let spellRep = (charData[spellRepAttr] === 0 || charData[spellRepAttr] === "")? charData["z_erstrepraesentation"] : charData[spellRepAttr];
-	debugLog(func, spellRep, charData, spellAttrs);
+	let spellRep = "";
 	let modified = false;
+	if (charData[spellRepAttr] === 0 || charData[spellRepAttr] === "") {
+		spellRep = charData["z_erstrepraesentation"];
+	} else {
+		spellRep = charData[spellRepAttr];
+	}
+	debugLog(func, spellRep, charData, spellAttrs);
+
 	switch (spellRep) {
 		case "Elf":
 			debugLog(func, "Adapting for elven rep");
@@ -77,6 +83,10 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 	safeGetAttrs(["z_erstrepraesentation", spellRepAttr, "v_festematrix", "n_spruchhemmung", "KL", "IN", "CH"], function (v) {
 		let repModified = modifySpellAttributesByRepresentation(spellRepAttr, v, stats);
 		// Build Roll Macro
+		let repModifiedText = "";
+		if (repModified) {
+			repModifiedText = "Die verwendeten Attribute wurden durch die Repräsentation modifiziert";
+		}
 		var rollMacro = "";
 
 		rollMacro +=
@@ -94,7 +104,7 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 			"{{result=[[0]]}} " +
 			"{{criticality=[[0]]}} " +
 			"{{critThresholds=[[[[@{cs_zauber}]]d1cs0cf2 + [[@{cf_zauber}]]d1cs0cf2]]}} " + 
-			"{{repmod=" + (repModified ? "Die verwendeten Attribute wurden durch die Repräsentation modifiziert" : "") + "}} ";
+			"{{repmod=" + repModifiedText + "}} ";
 		debugLog(func, rollMacro);
 
 		// Execute Roll
