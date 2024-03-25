@@ -12,7 +12,7 @@ var versionsWithMigrations = [
 		20220604,
 		20220821,
 		20230618,
-		20240314
+		20240325
 ];
 
 /*
@@ -834,8 +834,8 @@ function migrateTo20230618(migrationChain) {
 /*
 	Migration steps: rename attribute subtag1 to z_erstrepraesentation and map its value
 */
-function migrateTo20240314(migrationChain) {
-	var caller = "migrateTo20240314";
+function migrateTo20240325(migrationChain) {
+	var caller = "migrateTo20240325";
 	debugLog(caller, "Invoked.");
 	let valueMap = {
 		"---": "",
