@@ -27887,7 +27887,8 @@ on(spells.map(spell => "clicked:" + spell + "-action").join(" "), (info) => {
 	var trigger = info["triggerName"].replace(/clicked:([^-]+)-action/, '$1');
 	var nameInternal = spellsData[trigger]["internal"];
 	var nameUI = spellsData[trigger]["ui"];
-	var stats = spellsData[trigger]["stats"];
+	//Copy the array, otherwise we get a reference and modify spellsData
+	var stats = [...spellsData[trigger]["stats"]];
 	var spellRepAttr = trigger + "_rep";
 	debugLog(func, trigger, spellsData[trigger]);
 	safeGetAttrs(["z_erstrepraesentation", spellRepAttr, "v_festematrix", "n_spruchhemmung", "KL", "IN", "CH"], function (v) {
