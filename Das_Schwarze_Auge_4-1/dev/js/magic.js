@@ -36,7 +36,8 @@ function modifySpellAttributesByRepresentation(spellRepAttr, charData, spellAttr
 				if	(spellAttrs[1] === spellAttrs[0] || spellAttrs[2] === spellAttrs[0]) {
 					doubleAttr = spellAttrs[0];
 				}
-			} else {
+			} 
+			if (doubleAttr === "") {
 				if ((spellAttrs[1] === "KL" || spellAttrs[1] === "IN") && spellAttrs[1] === spellAttrs[2]) {
 					doubleAttr = spellAttrs[1];
 				}
