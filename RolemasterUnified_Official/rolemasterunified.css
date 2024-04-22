@@ -87,6 +87,11 @@ h3 {
   background: none;
 }
 
+button[type=roll].sheet-d6-dice::before {
+    font-family: 'dicefontd10';
+    content: 't';
+}
+
 
 /* Icons */
 .zmaterial-icons-round {
@@ -187,9 +192,9 @@ input:not(:checked).toggle + .toggler { display: none; }
  *   Skill       Ranks  +Bonus
  */
 
+
 .skilllist {
     column-count: 3;
-
 }
 
 
@@ -220,9 +225,11 @@ input:not(:checked).toggle + .toggler { display: none; }
 }
 
 .skill, .skill_specialization, .skill_subskill {
-    
     display: grid;
-    grid-template-columns: 1fr 2em 3em;
+    
+    grid-template-columns: 1fr 2em 3em 2em;
+    -webkit-column-break-inside: avoid;
+    break-inside: avoid;
 }
 
 .skill:nth-of-type(even) {
@@ -265,6 +272,11 @@ input:not(:checked).toggle + .toggler { display: none; }
     grid-column: 3 / 3;
 }
 
+.skill_roll {
+    text-align: right;
+    grid-column: 4 / 4;
+}
+
 .subskill_name {
     padding-left: 3px;
     font-family: cursive;
@@ -290,6 +302,9 @@ input:not(:checked).toggle + .toggler { display: none; }
     
     grid-template-columns: 1fr 4em 5em 8em 2em;
     display: grid;
+    border-bottom: 2px;
+    margin-bottom: 2px;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.3);
 }
 
 .spellname {
@@ -356,9 +371,13 @@ input:not(:checked).toggle + .toggler { display: none; }
  */
 /* Info about the curernt item thing (eg the description of hot to derive the stat)*/
 .icon {
-  position: relative;
   display: inline-block;
+  position: relative;
   color: rgba(100,100,100,0.8);
+}
+
+.iconwrap {
+  position: relative;
 }
 
 /**
@@ -562,12 +581,18 @@ div.attacks {
     z-index:400;
 }
 
-
-
-/* The talents on the main page */
-.talent_name {
-    font-weight: bold;
+/* Title of the edit box toggle to edit */
+.editbox .doedit, .editbox .noedit {
+    display: none;
 }
+
+.edit-name-toggle[value="true"] ~ .doedit {
+    display: inline;
+}
+.edit-name-toggle[value="false"] ~ .noedit {
+    display: inline;
+}
+
 
 /* Tabs for Our creation */
 /** Source: https://codepen.io/markcaron/pen/MvGRYV */
@@ -709,5 +734,93 @@ div.repcontrol {
     background: white;/* FIXME: should be styled based on color */
 }
 
-/* vim: set sts=4 sw=4 : */
+
+button.nodie::before {
+    content: "" !important;
+}
+button.nodie {
+    font-size: 1em !important;
+    padding: 0 !important;
+}
+
+/* Stylesheet for roll boxes */
+.sheet-rolltemplate-rmurollbox {
+  padding: 1rem;
+  width: 95%;
+  box-shadow: 0 5px 20px 0 rgba(0,0,0,0.25),
+    0 5px 10px 0 rgba(0,0,0,0.17);
+  background-color: rgb(255, 216, 131);
+  border-radius: 0.5rem;
+  line-height: 1.5em;
+  
+  border-left: 0 solid #fca80f;
+  transition: border-left 300ms ease-in-out, padding-left 300ms ease-in-out;
+}
+
+/* Stylesheet for roll boxes */
+.sheet-rolltemplate-rmuinitbox {
+  background-color: rgb(216, 255, 131);
+}
+
+.sheet-rolltemplate-rmurollbox:hover {
+  padding-left: 0.5rem;
+  border-left: 0.5rem solid #fca80f;
+  box-shadow: 0 10px 25px 0 rgba(0,0,0,0.7),
+    0 10px 20px 0 rgba(0,0,0,0.8);
+}
+
+.sheet-rolltemplate-rmurollbox > :first-child {
+  margin-top: 0;
+}
+
+.sheet-rolltemplate-rmurollbox > :last-child {
+  margin-bottom: 0;
+}
+
+.sheet-rolltemplate.rmurollbox > span {
+    border-radius: 3px !important;
+}
+
+.rollbutton.jq {
+    border: 1px solid red;
+}
+
+
+
+
+
+
+.cmtalent {
+    background-color: #ACC3F5;
+    margin: 1em;
+    box-shadow: 0 4px 12px 0 rgba(0,0,0,0.4);
+    padding: 3px;
+}
+
+
+.choice-showing.talent_inline {
+    display: inline !important;
+}
+
+
+.talent:nth-of-type(even) .cmtalent {
+    background-color: #ADF4F5;
+}
+
+@media (prefers-color-scheme: dark) {
+
+}
+
+
+
+
+/* The talents on the main page */
+.talent_name {
+    font-weight: bold;
+}
+
+
+
+
+/* vim: set sts=4 sw=4 syn=css : */
 
